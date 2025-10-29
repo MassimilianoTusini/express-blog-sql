@@ -16,7 +16,7 @@ app.get('/posts', (req, res) => {
     });
 });
 
-// SHOW per mostrare un post tramite ID
+// SHOW per mostrare un post tramite il suo ID
 app.get('/posts:id', (req, res) => {
     const id = req.params.id;
     const sql = 'SELECT * FROM posts WHERE id = ?';
@@ -30,5 +30,19 @@ app.get('/posts:id', (req, res) => {
             return res.status(404).json({error: 'Post non trovato'});
         }
         res.json(results[0]);
+    });
+});
+
+// DESTROY per eliminare un post tramite il suo ID
+app.delete('/posts:id', (req, res) => {
+    const id = req.params.id;
+    const sql = 'DESTROY * FROM posts WHERE id = ?';
+
+    connection.query(sql, [id], (err, results) => {
+        if (err) {
+            console.error('Errore nella cancellazione del post:', err);
+            return res.status(500).json({ error: 'Errore nella cancellazione del post:', err})
+        }
+        res.sendStatus(204);
     });
 });
